@@ -1,0 +1,39 @@
+@keyframes backgroundMove {
+  0% {
+      background-position: 0% 50%;
+  }
+  50% {
+      background-position: 100% 50%;
+  }
+  100% {
+      background-position: 0% 50%;
+  }
+}
+
+header {
+  background-color: #0A0908;
+  padding: 25px 0;
+}
+
+nav {
+  margin: auto;
+  text-align: center;
+}
+
+nav a {
+  color: #fff;
+  font-size: 20px;
+  text-decoration: none;
+  padding: 20px 50px; 
+  margin: 0 50px;
+  border-radius: 5px;
+  transition: background-color 0.5s ease;
+}
+
+body {
+  background: linear-gradient(135deg, #301934, black, purple); /* Adjusted colors and direction */
+  background-size: 300% 100%; /* Adjust the size for smoother movement */
+  animation: backgroundMove 10s ease infinite; /* Animation to move background */
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
