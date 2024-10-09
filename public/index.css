@@ -1,180 +1,71 @@
-body {
-    background-color: red;
-  }
-  .action-buttons-container {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 20px;
-  }
-
-  .shadow_leaderboard__btn {
-    background-color: #00E8FF;
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-  }
-
-  .shadow_leaderboard__btn:hover {
-    background-color: #00B8C1;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-    transform: translateY(-2px);
-  }
-
-  .shadow_leaderboard__btn:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  }
-
-  .quizzes-header-container {
-    width: 500px;
-    text-align: center;
-    margin: 0 auto 30px; /* Center the container and add bottom margin */
-    padding: 20px; /* Add padding to the container */
-    background-color: #f9f9f9; /* Optional: Add a background color */
-    border-radius: 10px; /* Optional: Round the corners */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
-    opacity: 0.5;
-    margin-top:10px;
+/* Basic reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  text-align: center;
+  padding: 20px;
+}
 
-  .quizzes-header {
-      font-size: 36px; /* Increase the text size */
-      color: #333; /* Adjust color as needed */
-      font-weight: bold; /* Make the text bold */
-      margin: 0; /* Remove default margin */
-  }
+#navbar {
+  margin-bottom: 30px;
+}
 
-  .quizzes-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-  }
+.home-content h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
 
-  /* Card style */
-  .card {
-    position: relative;
-    width: 300px;
-    height: 200px;
-    background-color: #f2f2f2;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    perspective: 1000px;
-    box-shadow: 0 0 0 5px #301934;
-    transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  }
+.home-content p {
+  font-size: 1.2rem;
+  color: #333;
+}
 
-  .card__content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    padding: 20px;
-    box-sizing: border-box;
-    background-color: rgba(242, 242, 242, 0.9);
-    transform: rotateX(-90deg);
-    transform-origin: bottom;
-    transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  }
+/* Navbar styling */
+.navbar {
+  background-color: #333;
+  padding: 20px;
+}
 
-  .card:hover .card__content {
-    transform: rotateX(0deg);
-  }
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
 
-  .card__title {
-    margin: 0;
-    font-size: 24px;
-    color: #333;
-    font-weight: 700;
-  }
+.navbar-title {
+  color: white;
+  margin-bottom: 10px;
+  font-size: 1.8rem;
+}
 
-  .card__description {
-    margin: 10px 0 0;
-    font-size: 14px;
-    color: #777;
-    line-height: 1.4;
-  }
+/* Style the forms to display inline like the buttons */
+.navbar-links form {
+  display: inline-block;
+  margin: 5px;
+}
 
-  .create_button_admin {
-      background-color: #6aff00;
-      border: none;
-      color: white;
-      padding: 10px 20px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      transition: all 0.3s ease;
-  }
+/* Button styles */
+.navbar-links button {
+  background-color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
 
-  .create_button_admin:hover {
-      background-color: rgb(3, 112, 6);
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-      transform: translateY(-2px);
-  }
+.navbar-links button:hover {
+  background-color: #ddd;
+}
 
-  .create_button_admin:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  }
+.navbar-links button:focus {
+  outline: none;
+}
 
-  .shadow_logout__btn {
-      background-color: red;
-      border: none;
-      color: white;
-      padding: 10px 20px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      transition: all 0.3s ease;
-  }
-
-  .shadow_logout__btn:hover {
-      background-color: darkred;
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-      transform: translateY(-2px);
-  }
-
-  .shadow_logout__btn:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  }
-
-  .template_button_admin {
-      background-color: #301934;
-      border: none;
-      color: white;
-      padding: 10px 20px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      transition: all 0.3s ease;
-  }
-
-  .template_button_admin:hover {
-      background-color: purple;
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-      transform: translateY(-2px);
-  }
-
-  .template_button_admin:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  }
