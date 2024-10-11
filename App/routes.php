@@ -7,7 +7,7 @@ return [
 
     "/" => "../App/controllers/stock/index.php",
     "/plans" => "../App/controllers/stock/plans.php",
-    "/create-plan" => "../App/controllers/stock/create-plan.php",
+    "/create-plan" => "../App/controllers/stock/CreateWorkout.php",
     "/profile" => "../App/controllers/stock/profile.php",
     "/streak" => "../App/controllers/stock/streak.php",
 ];
