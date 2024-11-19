@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($errors)) {
         session_start();
         $_SESSION["user"] = true;
-        $_SESSION["user_id"] = $user["id"];
+        $_SESSION["user_id"] = $user["user_id"];
         $_SESSION["is_admin"] = $user["admin"] == 1; // Ensure this line correctly sets the admin status
         $_SESSION["username"] = $_POST["username"];
         // Redirect based on admin status

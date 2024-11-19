@@ -3,7 +3,7 @@ return [
   "host" => "localhost",
   "dbname" => "veseliba",
   "user" => "root",
-  "password" => "",
+  "password" => "root",
   "charset" => "utf8mb4"
 ];
 ?>
