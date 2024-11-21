@@ -11,5 +11,6 @@ return [
     "/logout" => "../App/controllers/auth/logout.php",
     "/create-plan" => "../App/controllers/stock/CreateWorkout.php",
     "/add-exercises" => "../App/controllers/stock/CreatePlans.php",
+    "/view-exercises" => "../App/controllers/stock/ViewWorkout.php",
 ];
 ?>

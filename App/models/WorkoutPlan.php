@@ -84,4 +84,5 @@ class WorkoutPlan {
         return $query->fetchColumn() > 0;
     }
     
+    
 }

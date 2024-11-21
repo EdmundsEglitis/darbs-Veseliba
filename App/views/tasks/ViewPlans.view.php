@@ -44,6 +44,7 @@
                     <h3><?= htmlspecialchars($plan['title']) ?></h3>
                     <p>Created: <?= date("F j, Y, g:i a", strtotime($plan['created_at'])) ?></p>
                     <a href="/add-exercises?plan_id=<?= $plan['workout_id'] ?>">Add Exercises</a>
+                    <a href="/view-exercises?plan_id=<?= $plan['workout_id'] ?>">View workout</a>
                 </div>
             <?php endforeach; ?>
         </div>
