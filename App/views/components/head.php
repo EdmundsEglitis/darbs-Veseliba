@@ -11,7 +11,7 @@
         <div class="navbar-links">
 
             <!-- History button with GET request -->
-            <form action="/" method="GET">
+            <form action="/history" method="GET">
                 <button type="submit">History</button>
             </form>
 

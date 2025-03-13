@@ -12,5 +12,8 @@ return [
     "/create-plan" => "../App/controllers/stock/CreateWorkout.php",
     "/add-exercises" => "../App/controllers/stock/CreatePlans.php",
     "/view-exercises" => "../App/controllers/stock/ViewWorkout.php",
+    
+    "/setgoal" => "../App/controllers/stock/SetGoal.php",
+    "/history" => "../App/controllers/stock/Dashboard.php",
 ];
 ?>
