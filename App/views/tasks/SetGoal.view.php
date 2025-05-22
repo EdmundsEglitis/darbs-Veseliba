@@ -1,24 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($title) ?></title>
-</head>
-<body>
-    <h1>Set Your Workout Goal</h1>
 
-    <form method="POST">
-        <label>Select workout days:</label><br>
-        <input type="checkbox" name="workout_days[]" value="Monday"> Monday <br>
-        <input type="checkbox" name="workout_days[]" value="Tuesday"> Tuesday <br>
-        <input type="checkbox" name="workout_days[]" value="Wednesday"> Wednesday <br>
-        <input type="checkbox" name="workout_days[]" value="Thursday"> Thursday <br>
-        <input type="checkbox" name="workout_days[]" value="Friday"> Friday <br>
-        <input type="checkbox" name="workout_days[]" value="Saturday"> Saturday <br>
-        <input type="checkbox" name="workout_days[]" value="Sunday"> Sunday <br>
-        <br>
-        <button type="submit">Save Goal</button>
-    </form>
-</body>
-</html>
+    <div style="margin-bottom: 1em;">
+        <strong>Your current goal:</strong>
+        <?= implode(", ", $selectedDays) ?>
+    </div>
+
+
+<?php
+function isChecked($day, $selectedDays) {
+    return in_array($day, $selectedDays) ? 'checked' : '';
+}
+?>
+<h1>Set Your Workout Goal</h1>
+
+
+<?php if (!empty($errors)): ?>
+    <div style="color: red;">
+        <?php foreach ($errors as $err): ?>
+            <p><?= htmlspecialchars($err) ?></p>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+
+<form method="POST">
+    <label>Select workout days:</label><br>
+    <?php
+    $daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    foreach ($daysOfWeek as $day): ?>
+        <input type="checkbox" name="workout_days[]" value="<?= $day ?>" <?= isChecked($day, $selectedDays) ?>>
+        <?= $day ?><br>
+    <?php endforeach; ?>
+    <br>
+    <button type="submit">Save Goal</button>
+</form>
+

@@ -10,36 +10,85 @@ class GoalModel {
     }
 
     // Set a user's workout goal (which days they want to work out)
-    public function setWorkoutGoal(int $userId, array $days) {
-        $daysString = implode(',', $days); // Convert array to a string
-        $query = $this->db->dbconn->prepare("INSERT INTO user_goals (user_id, workout_days) VALUES (:user_id, :workout_days)
-            ON DUPLICATE KEY UPDATE workout_days = :workout_days");
-        $query->execute([
-            ':user_id' => $userId,
-            ':workout_days' => $daysString,
-        ]);
+    public function getWorkoutGoal($userId) {
+        $stmt = $this->db->prepare("SELECT workout_days FROM user_goals WHERE user_id = :user_id");
+        $stmt->bindParam(':user_id', $userId);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    
+    public function setWorkoutGoal($userId, $workoutDays) {
+        $goalDays = implode(",", $workoutDays);
+    
+        // Check if goal already exists
+        $stmt = $this->db->prepare("SELECT id FROM user_goals WHERE user_id = :user_id");
+        $stmt->bindParam(":user_id", $userId);
+        $stmt->execute();
+    
+        if ($stmt->fetch()) {
+            // ✅ UPDATE existing goal
+            $updateStmt = $this->db->prepare("UPDATE user_goals SET workout_days = :workout_days WHERE user_id = :user_id");
+            $updateStmt->bindParam(":workout_days", $goalDays);
+            $updateStmt->bindParam(":user_id", $userId);
+            return $updateStmt->execute();
+        } else {
+            // ✅ INSERT new goal
+            $insertStmt = $this->db->prepare("INSERT INTO user_goals (user_id, workout_days) VALUES (:user_id, :workout_days)");
+            $insertStmt->bindParam(":user_id", $userId);
+            $insertStmt->bindParam(":workout_days", $goalDays);
+            return $insertStmt->execute();
+        }
+    }
+    
+    
+    
 
-        return $query->rowCount() > 0;
+
+
+    public function isWorkoutDay($userId) {
+        $query = "SELECT workout_days FROM user_goals WHERE user_id = :user_id";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(":user_id", $userId);
+        $stmt->execute();
+        
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$result) return false;
+    
+        $workoutDays = explode(",", $result["workout_days"]); // Convert string to array
+        $today = date("l"); // Get today's day name (e.g., "Monday")
+    
+        return in_array($today, $workoutDays);
+    }
+    
+    public function logWorkout($userId) {
+        if (!$this->isWorkoutDay($userId)) {
+            return false; // Not a valid workout day
+        }
+    
+        // Check if workout already logged today
+        $query = "SELECT COUNT(*) FROM workout_logs WHERE user_id = :user_id AND date = CURDATE()";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(":user_id", $userId);
+        $stmt->execute();
+        
+        if ($stmt->fetchColumn() > 0) {
+            return false; // Workout already logged today
+        }
+    
+        // Log workout
+        $query = "INSERT INTO workout_logs (user_id, date) VALUES (:user_id, CURDATE())";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(":user_id", $userId);
+        $stmt->execute();
+    
+        // Increase streak
+        $query = "UPDATE users SET streak = streak + 1 WHERE id = :user_id";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(":user_id", $userId);
+        return $stmt->execute();
     }
 
-    // Get the user's workout goal
-    public function getWorkoutGoal(int $userId) {
-        $query = $this->db->dbconn->prepare("SELECT workout_days FROM user_goals WHERE user_id = :user_id");
-        $query->execute([':user_id' => $userId]);
-        $result = $query->fetch(PDO::FETCH_ASSOC);
-        return $result ? explode(',', $result['workout_days']) : [];
-    }
 
-    // Log a completed workout
-    public function logWorkout(int $userId, string $date) {
-        $query = $this->db->dbconn->prepare("INSERT INTO workout_logs (user_id, workout_date) VALUES (:user_id, :workout_date)");
-        $query->execute([
-            ':user_id' => $userId,
-            ':workout_date' => $date,
-        ]);
-
-        return $query->rowCount() > 0;
-    }
 
     // Check if the user logged a workout on a specific day
     public function didUserWorkout(int $userId, string $date) {
@@ -117,6 +166,35 @@ class GoalModel {
         $query->execute([':user_id' => $userId]);
         return $query->rowCount() > 0;
     }
+    
+    public function getUserWorkouts($userId) {
+        $query = "SELECT user_id, title, workout_id FROM WorkoutPlans WHERE user_id = :user_id";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(":user_id", $userId);
+        $stmt->execute();
+      return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    public function getWorkoutById($userId, $workoutId) {
+        $query = "SELECT title FROM WorkoutPlans WHERE workout_id = :id AND user_id = :user_id";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(":id", $workoutId, PDO::PARAM_INT);
+        $stmt->bindParam(":user_id", $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    
+    
+    public function logWorkoutWithName($userId, $workoutName) {
+        $query = "INSERT INTO workout_logs (user_id, workout_date, workout_name)
+                  VALUES (:user_id, CURDATE(), :workout_name)";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(":user_id", $userId);
+        $stmt->bindParam(":workout_name", $workoutName);
+        return $stmt->execute();
+    }
+    
+    
 }
 
 ?>

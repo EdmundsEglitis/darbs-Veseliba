@@ -15,5 +15,9 @@ return [
     
     "/setgoal" => "../App/controllers/stock/SetGoal.php",
     "/history" => "../App/controllers/stock/Dashboard.php",
+
+
+    "/streak" => "../App/controllers/stock/SetGoal.php",
+    "/completedWorkouts" => "../App/controllers/stock/CompletedWorkouts.php",
 ];
 ?>

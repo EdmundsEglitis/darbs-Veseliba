@@ -12,30 +12,32 @@ if (!$userId) {
     exit;
 }
 
-// Handle goal submission
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $errors = [];
+$errors = [];
 
-    // Validate workout days
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $workoutDays = $_POST["workout_days"] ?? [];
+
     if (empty($workoutDays)) {
         $errors["workout_days"] = "Please select at least one workout day.";
-    }
-
-    if (empty($errors)) {
-        if ($goalModel->setWorkoutGoal($userId, $workoutDays)) {
-            $_SESSION["flash"] = "Workout goal set successfully!";
+    } else {
+        $saved = $goalModel->setWorkoutGoal($userId, $workoutDays);
+        if ($saved) {
+            // ✅ Goal saved — reload this page to get fresh data
             header("Location: /set-goals");
             exit;
         } else {
-            $errors["general"] = "An error occurred while setting the goal. Please try again.";
+            $errors["general"] = "An error occurred while setting the goal.";
         }
     }
 }
 
-// Fetch existing goals
+// ✅ Always re-fetch the latest goal for display
 $existingGoal = $goalModel->getWorkoutGoal($userId);
+$selectedDays = [];
+
+if ($existingGoal && isset($existingGoal['workout_days'])) {
+    $selectedDays = explode(",", $existingGoal['workout_days']);
+}
 
 $title = "Set Your Workout Goals";
 require "../App/views/tasks/SetGoal.view.php";
-?>

@@ -35,6 +35,10 @@
                 <button type="submit">Streak</button>
             </form>
 
+            <form action="/completedWorkouts" method="GET">
+                <button type="submit">completedWorkouts</button>
+            </form>
+
         </div>
     </div>
 </nav>
