@@ -1,4 +1,6 @@
-
+<?php 
+include __DIR__ . '/../components/head.php'; 
+?>
 <!-- Set Workout Days -->
 <!-- Log a Workout -->
 <form action="/history" method="POST">
