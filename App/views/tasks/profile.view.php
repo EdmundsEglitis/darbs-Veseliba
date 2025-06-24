@@ -10,6 +10,12 @@
 </head>
 <?php require "../App/views/components/head.php"; ?>
 <style>
+  html, body {
+    height: auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
+}
+
   body {
     margin: 0;
     font-family: 'Arial Black', sans-serif;

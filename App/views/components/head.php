@@ -99,7 +99,7 @@
     <h2 class="navbar-title">ALL 4 HEALTH</h2>
     <div class="navbar-links">
       <form action="/" method="GET"><button type="submit">Home</button></form>
-      <form action="/history" method="GET"><button type="submit">History</button></form>
+      <form action="/history" method="GET"><button type="submit">Log workout</button></form>
       <form action="/plans" method="GET"><button type="submit">Plans</button></form>
       <form action="/create-plan" method="GET"><button type="submit">Create Plan</button></form>
       <form action="/profile" method="GET"><button type="submit">Profile</button></form>

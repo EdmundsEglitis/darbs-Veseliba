@@ -19,5 +19,8 @@ return [
 
     "/streak" => "../App/controllers/stock/SetGoal.php",
     "/completedWorkouts" => "../App/controllers/stock/CompletedWorkouts.php",
+    "/edit-workout" => "../App/controllers/stock/EditWorkout.php",
+"/delete-workout" => "../App/controllers/stock/DeleteWorkout.php",
+
 ];
 ?>

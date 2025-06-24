@@ -1,9 +1,19 @@
 <?php 
 include __DIR__ . '/../components/head.php'; 
 ?>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <style>
   /* Container to center and limit width */
+  html, body {
+    height: auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
+}
+
   .page-content {
     max-width: 1000px;
     margin: 2rem auto;

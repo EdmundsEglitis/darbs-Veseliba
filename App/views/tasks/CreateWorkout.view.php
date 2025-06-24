@@ -5,6 +5,12 @@ include __DIR__ . '/../components/head.php';
 
 <style>
   /* Full width body, no margin */
+  html, body {
+    height: auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
+}
+
   body {
     font-family: 'Arial Black', sans-serif;
     background-color: #121212;

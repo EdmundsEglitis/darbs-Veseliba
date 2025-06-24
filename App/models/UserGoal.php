@@ -126,46 +126,53 @@ class GoalModel {
 
         return $streak;
     }
-    public function resetStreakIfMissed($userId) {
-        // Get user's workout days
-        $stmt = $this->db->dbconn->prepare("SELECT workout_days FROM user_goals WHERE user_id = :user_id");
-        $stmt->execute([':user_id' => $userId]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-        if (!$result || empty($result['workout_days'])) {
-            echo "ℹ️ No workout goal found or no workout days set.<br>";
-            return;
-        }
-    
-        $workoutDays = explode(",", $result['workout_days']);
-        $today = date("l");
-    
-        echo "ℹ️ Today is $today. Workout days: " . implode(", ", $workoutDays) . "<br>";
-    
-        if (!in_array($today, $workoutDays)) {
-            echo "ℹ️ Today is not a scheduled workout day.<br>";
-            return;
-        }
-    
-        // Check if user logged today
-        $stmt = $this->db->dbconn->prepare("SELECT COUNT(*) FROM workout_logs WHERE user_id = :user_id AND workout_date = CURDATE()");
-        $stmt->execute([':user_id' => $userId]);
-        $count = $stmt->fetchColumn();
-    
-        echo "ℹ️ Workout logs found for today: $count<br>";
-    
-        if ($count == 0) {
-            // Missed workout → reset streak
-            $stmt = $this->db->dbconn->prepare("UPDATE users SET streak = 0 WHERE user_id = :user_id");
-            if ($stmt->execute([':user_id' => $userId])) {
-                echo "✅ Streak reset to 0 due to missed workout.<br>";
-            } else {
-                echo "❌ Failed to reset streak.<br>";
-            }
-        } else {
-            echo "✅ Workout logged today — streak intact.<br>";
-        }
+public function resetStreakIfMissed($userId) {
+    // Get user's goal days
+    $stmt = $this->db->dbconn->prepare("SELECT workout_days FROM user_goals WHERE user_id = :user_id");
+    $stmt->execute([':user_id' => $userId]);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$result || empty($result['workout_days'])) {
+        echo "ℹ️ No workout goal found or no workout days set.<br>";
+        return;
     }
+
+    $workoutDays = explode(",", $result['workout_days']);
+    $yesterday = (new DateTime('yesterday'))->format('l');
+    $yesterdayDate = (new DateTime('yesterday'))->format('Y-m-d');
+
+    
+
+    if (!in_array($yesterday, $workoutDays)) {
+        echo "ℹ️ Yesterday was not a scheduled workout day.<br>";
+        return; // Nothing to reset
+    }
+
+    // Did the user log a workout yesterday?
+    $stmt = $this->db->dbconn->prepare("
+        SELECT COUNT(*) FROM workout_logs
+        WHERE user_id = :user_id AND workout_date = :workout_date
+    ");
+    $stmt->execute([
+        ':user_id' => $userId,
+        ':workout_date' => $yesterdayDate
+    ]);
+    $count = $stmt->fetchColumn();
+
+    
+
+    if ($count == 0) {
+        $stmt = $this->db->dbconn->prepare("UPDATE users SET streak = 0 WHERE user_id = :user_id");
+        if ($stmt->execute([':user_id' => $userId])) {
+            
+        } else {
+            
+        }
+    } else {
+        
+    }
+}
+
     
     
 
@@ -207,44 +214,68 @@ public function getStreak($userId) {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
-    
-    public function logWorkoutWithName($userId, $workoutName) {
-        if (!$this->db) {
-            echo "❌ Database connection is not set.<br>";
-            return false;
-        }
-    
-        // Check if workout already logged today
-        $check = $this->db->prepare("
-            SELECT COUNT(*) FROM workout_logs 
-            WHERE user_id = :user_id AND workout_date = CURDATE()
+  public function logWorkoutWithName($userId, $workoutName) {
+    // ✅ Check if today is a scheduled workout day
+    $goalQuery = $this->db->prepare("SELECT workout_days FROM user_goals WHERE user_id = :user_id");
+    $goalQuery->bindParam(":user_id", $userId);
+    $goalQuery->execute();
+    $goal = $goalQuery->fetch(PDO::FETCH_ASSOC);
+
+    if (!$goal) {
+        echo "❌ No workout goal set.<br>";
+        return false;
+    }
+
+    $workoutDays = explode(",", $goal['workout_days']);
+    $today = date('l');
+
+    if (!in_array($today, $workoutDays)) {
+        echo "❌ Today is not a scheduled workout day.<br>";
+        return false;
+    }
+
+    // ✅ Check if workout already logged today
+    $checkQuery = $this->db->prepare("
+        SELECT COUNT(*) FROM workout_logs
+        WHERE user_id = :user_id AND workout_date = CURDATE()
+    ");
+    $checkQuery->bindParam(":user_id", $userId);
+    $checkQuery->execute();
+
+    if ($checkQuery->fetchColumn() > 0) {
+        echo "❌ Workout already logged today. Streak will not increment.<br>";
+        return false;
+    }
+
+    // ✅ Log the workout
+    $logQuery = $this->db->prepare("
+        INSERT INTO workout_logs (user_id, workout_date, workout_name)
+        VALUES (:user_id, CURDATE(), :workout_name)
+    ");
+    $logQuery->bindParam(":user_id", $userId);
+    $logQuery->bindParam(":workout_name", $workoutName);
+
+    if ($logQuery->execute()) {
+        // ✅ Increment streak
+        $streakQuery = $this->db->prepare("
+            UPDATE users SET streak = streak + 1 WHERE user_id = :user_id
         ");
-        $check->bindParam(":user_id", $userId);
-        $check->execute();
-        if ($check->fetchColumn() > 0) {
-            echo "⚠️ Workout already logged today.<br>";
-            return false;
-        }
-    
-        echo "User ID: $userId | Workout Name: $workoutName <br>";
-    
-        // Attempt to insert
-        $query = "INSERT INTO workout_logs (user_id, workout_date, workout_name)
-                  VALUES (:user_id, CURDATE(), :workout_name)";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(":user_id", $userId);
-        $stmt->bindParam(":workout_name", $workoutName);
-    
-        if ($stmt->execute()) {
-            echo "✅ Workout logged successfully.<br>";
-            // Increment streak logic (as before)
+        $streakQuery->bindParam(":user_id", $userId);
+
+        if ($streakQuery->execute()) {
+            echo "✅ Workout logged and streak incremented.<br>";
             return true;
         } else {
-            $errorInfo = $stmt->errorInfo();
-            echo "❌ Failed to log workout. SQLSTATE: " . $errorInfo[0] . " | Error: " . $errorInfo[2] . "<br>";
-            return false;
+            echo "❌ Workout logged but failed to increment streak.<br>";
         }
+    } else {
+        echo "❌ Failed to log workout.<br>";
     }
+
+    return false;
+}
+
+
     
     
     

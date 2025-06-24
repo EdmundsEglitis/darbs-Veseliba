@@ -8,6 +8,12 @@
 </head>
 <body>
     <style>
+      html, body {
+    height: auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
+}
+
         .flash {
   color: green;
   font-weight: bold;

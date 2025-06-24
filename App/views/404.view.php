@@ -13,6 +13,12 @@
 <?php require "../App/views/components/footer.php" ?>
 
 <style>
+  html, body {
+    height: auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
+}
+
   body {
     background-color: #212121;
     background: linear-gradient(90deg, #212121, #424242);

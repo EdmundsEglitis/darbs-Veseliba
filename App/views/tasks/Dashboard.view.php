@@ -3,6 +3,12 @@ include __DIR__ . '/../components/head.php';
 ?>
 
 <style>
+  html, body {
+    height: auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
+}
+
   /* Container for page content */
   .page-container {
     max-width: 600px;
